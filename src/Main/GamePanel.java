@@ -31,8 +31,8 @@ public class GamePanel extends JPanel implements Runnable{
 
     //SYSTEM
     TileManager tileM = new TileManager(this);
-    MapObjectManager mapObjectM = new MapObjectManager(this);
-    KeyHandler keyH = new KeyHandler();
+//    MapObjectManager mapObjectM = new MapObjectManager(this);
+    KeyHandler keyH = new KeyHandler(this);
     Sound se = new Sound();
     Sound music = new Sound();
     public CollisionChecker checker = new CollisionChecker(this);
@@ -43,6 +43,11 @@ public class GamePanel extends JPanel implements Runnable{
     //ENTITY AND OBJECT
     public Player player = new Player(this,keyH);
     public SuperObject obj[] = new SuperObject[10];
+
+    //GAME STATE
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
 
 
     public GamePanel(){
@@ -57,6 +62,8 @@ public class GamePanel extends JPanel implements Runnable{
         assetSetter.setObject();
         //background music
         playMusic(3);
+        stopMusic();
+        gameState = playState;
     }
 
     public void startGameThread(){
@@ -101,7 +108,12 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update() {
 
-        player.update();
+        if(gameState == playState) {
+            player.update();
+        }
+        if(gameState == pauseState) {
+            //do nothing
+        }
 
     }
     public void paintComponent(Graphics g) {
