@@ -11,15 +11,14 @@ import java.io.IOException;
 
 public class Player extends Entity{
 
-    GamePanel gp;
     KeyHandler keyH;
     public final int screenX;
     public final int screenY;
-//    public int hasKey = 0;
+    int standCounter = 0;
 
     public Player(GamePanel gp, KeyHandler keyH) {
 
-        this.gp = gp;
+        super(gp);
         this.keyH = keyH;
 
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
@@ -41,74 +40,59 @@ public class Player extends Entity{
 
     public void getPlayerImage() {
 
-        up1 = setup("player_up1");
-        up2 = setup("player_up2");
-        up3 = setup("player_up3");
-        up4 = setup("player_up4");
-        up5 = setup("player_up5");
-        up6 = setup("player_up6");
-        up7 = setup("player_up7");
-        up8 = setup("player_up8");
-        up9 = setup("player_up9");
-        up10 = setup("player_up10");
-        up11 = setup("player_up11");
-        up12 = setup("player_up12");
+        up1 = setup("/player/player_up1");
+        up2 = setup("/player/player_up2");
+        up3 = setup("/player/player_up3");
+        up4 = setup("/player/player_up4");
+        up5 = setup("/player/player_up5");
+        up6 = setup("/player/player_up6");
+        up7 = setup("/player/player_up7");
+        up8 = setup("/player/player_up8");
+        up9 = setup("/player/player_up9");
+        up10 = setup("/player/player_up10");
+        up11 = setup("/player/player_up11");
+        up12 = setup("/player/player_up12");
 
-        down1 = setup("player_down1");
-        down2 = setup("player_down2");
-        down3 = setup("player_down3");
-        down4 = setup("player_down4");
-        down5 = setup("player_down5");
-        down6 = setup("player_down6");
-        down7 = setup("player_down7");
-        down8 = setup("player_down8");
-        down9 = setup("player_down9");
-        down10 = setup("player_down10");
-        down11 = setup("player_down11");
-        down12 = setup("player_down12");
+        down1 = setup("/player/player_down1");
+        down2 = setup("/player/player_down2");
+        down3 = setup("/player/player_down3");
+        down4 = setup("/player/player_down4");
+        down5 = setup("/player/player_down5");
+        down6 = setup("/player/player_down6");
+        down7 = setup("/player/player_down7");
+        down8 = setup("/player/player_down8");
+        down9 = setup("/player/player_down9");
+        down10 = setup("/player/player_down10");
+        down11 = setup("/player/player_down11");
+        down12 = setup("/player/player_down12");
 
-        left1 = setup("player_left1");
-        left2 = setup("player_left2");
-        left3 = setup("player_left3");
-        left4 = setup("player_left4");
-        left5 = setup("player_left5");
-        left6 = setup("player_left6");
-        left7 = setup("player_left7");
-        left8 = setup("player_left8");
-        left9 = setup("player_left9");
-        left10 = setup("player_left10");
-        left11 = setup("player_left11");
-        left12 = setup("player_left12");
+        left1 = setup("/player/player_left1");
+        left2 = setup("/player/player_left2");
+        left3 = setup("/player/player_left3");
+        left4 = setup("/player/player_left4");
+        left5 = setup("/player/player_left5");
+        left6 = setup("/player/player_left6");
+        left7 = setup("/player/player_left7");
+        left8 = setup("/player/player_left8");
+        left9 = setup("/player/player_left9");
+        left10 = setup("/player/player_left10");
+        left11 = setup("/player/player_left11");
+        left12 = setup("/player/player_left12");
 
-        right1 = setup("player_right1");
-        right2 = setup("player_right2");
-        right3 = setup("player_right3");
-        right4 = setup("player_right4");
-        right5 = setup("player_right5");
-        right6 = setup("player_right6");
-        right7 = setup("player_right7");
-        right8 = setup("player_right8");
-        right9 = setup("player_right9");
-        right10 = setup("player_right10");
-        right11 = setup("player_right11");
-        right12 = setup("player_right12");
-
+        right1 = setup("/player/player_right1");
+        right2 = setup("/player/player_right2");
+        right3 = setup("/player/player_right3");
+        right4 = setup("/player/player_right4");
+        right5 = setup("/player/player_right5");
+        right6 = setup("/player/player_right6");
+        right7 = setup("/player/player_right7");
+        right8 = setup("/player/player_right8");
+        right9 = setup("/player/player_right9");
+        right10 = setup("/player/player_right10");
+        right11 = setup("/player/player_right11");
+        right12 = setup("/player/player_right12");
     }
 
-
-    public BufferedImage setup(String imageName) {
-        UtilityTool uTool = new UtilityTool();
-        BufferedImage image = null;
-
-        try {
-            image = ImageIO.read(getClass().getResourceAsStream("/player/"+ imageName + ".png"));
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return image;
-    }
 
     public void update() {
 
@@ -130,10 +114,19 @@ public class Player extends Entity{
 
             }
 
+            // CHECK TILE COLLISION
             collisionOn = false;
             gp.checker.checkTile(this);
+
+            // CHECK OBJECT COLLISION
             int objIndex = gp.checker.checkObject(this,true);
             pickUpObject(objIndex);
+
+            // CHECK NPC COLLISION
+            int npcIndex = gp.checker.checkEntity(this, gp.npc);
+            interactNPC(npcIndex);
+
+            //IF COLLISION IS FALSE, PLAYER CAN MOVE
             if(!collisionOn) {
                 switch (direction) {
                     case "up" -> worldY -= speed;
@@ -155,9 +148,17 @@ public class Player extends Entity{
 
     }
 
+
+
     public void pickUpObject(int i) {
         if(i != 999) {
 
+        }
+    }
+
+    private void interactNPC(int npcIndex) {
+        if(npcIndex != 999) {
+            System.out.println("Interact with " + gp.npc[npcIndex]);
         }
     }
 
