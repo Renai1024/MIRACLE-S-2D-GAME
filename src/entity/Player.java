@@ -156,10 +156,15 @@ public class Player extends Entity{
         }
     }
 
-    private void interactNPC(int npcIndex) {
-        if(npcIndex != 999) {
-            System.out.println("Interact with " + gp.npc[npcIndex]);
+    private void interactNPC(int i) {
+
+        if(i != 999) {
+            if(gp.keyH.enterPressed) {
+                gp.gameState = gp.dialogueState;
+                gp.npc[i].speak();
+            }
         }
+        gp.keyH.enterPressed = false;
     }
 
     public void draw(Graphics2D g2) {
