@@ -1,6 +1,10 @@
 package Main;
 
+import object.OBJ_Hp;
+import object.SuperObject;
+
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -9,6 +13,7 @@ public class UI {
     GamePanel gp;
     Graphics2D g2;
     Font maruMonica;
+    BufferedImage hp_full, hp_half, hp_blank;
     public boolean messageOn = false;
     public String message = "";
     int messageCounter = 0;
@@ -27,6 +32,12 @@ public class UI {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        //CREATE HUD OBJECT
+        SuperObject heart = new OBJ_Hp(gp);
+        hp_full = heart.image;
+        hp_half = heart.image2;
+        hp_blank = heart.image3;
 
     }
 
@@ -49,16 +60,50 @@ public class UI {
         //PLAY STATE
         if(gp.gameState == gp.playState) {
             //DO PLAY STATE STUFF LATER
+            drawPlayerLife();
         }
 
         //PAUSE STATE
         if(gp.gameState == gp.pauseState) {
             drawPauseScreen();
+            drawPlayerLife();
         }
 
         //DIALOGUE STATE
         if(gp.gameState == gp.dialogueState) {
             drawDialogueScreen();
+            drawPlayerLife();
+        }
+    }
+
+    public void drawPlayerLife() {
+
+
+        int x = gp.tileSize/2;
+        int y = gp.tileSize/2;
+        int i = 0;
+
+        //DRAW BLANK LIFE
+        while(i < gp.player.maxLife/2) {
+            g2.drawImage(hp_blank, x, y, null);
+            i++;
+            x += gp.tileSize;
+        }
+
+        //RESET
+        x = gp.tileSize/2;
+        y = gp.tileSize/2;
+        i = 0;
+
+        //DRAW CURRENT LIFE
+        while(i < gp.player.life) {
+            g2.drawImage(hp_half, x, y, null);
+            i++;
+            if(i < gp.player.life) {
+                g2.drawImage(hp_full, x, y, null);
+            }
+            i++;
+            x += gp.tileSize;
         }
     }
 
@@ -112,9 +157,8 @@ public class UI {
         if(commandNum == 2){
             g2.drawString(">", x - gp.tileSize, y);
         }
-
-
     }
+
 
     public void drawPauseScreen() {
 

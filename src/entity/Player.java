@@ -2,12 +2,8 @@ package entity;
 
 import Main.GamePanel;
 import Main.KeyHandler;
-import Main.UtilityTool;
-
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class Player extends Entity{
 
@@ -36,6 +32,10 @@ public class Player extends Entity{
         worldY = gp.tileSize * 21;
         speed = 2;
         direction = "down";
+
+        //PLAYER STATUS
+        maxLife = 6;   //2 life = a heart
+        life = maxLife;
     }
 
     public void getPlayerImage() {
