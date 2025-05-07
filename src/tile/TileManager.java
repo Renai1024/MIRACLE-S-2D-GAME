@@ -52,6 +52,11 @@ public class TileManager {
             setup(14, "water3", true);
             setup(15, "water4", true);
 
+            setup(16, "lava", false);
+            setup(17, "ice", false);
+            setup(18, "transport1", false);
+
+
 
     }
 

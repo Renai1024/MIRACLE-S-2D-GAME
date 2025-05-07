@@ -3,6 +3,7 @@ package Main;
 import object.OBJ_Hp;
 import object.SuperObject;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -13,7 +14,7 @@ public class UI {
     GamePanel gp;
     Graphics2D g2;
     Font maruMonica;
-    BufferedImage hp_full, hp_half, hp_blank;
+    BufferedImage hp_full, hp_half, hp_blank, titleBackground;
     public boolean messageOn = false;
     public String message = "";
     int messageCounter = 0;
@@ -109,7 +110,14 @@ public class UI {
 
     public void drawTitleScreen() {
 
-        g2.setColor(new Color(0,0,0));
+        try {
+            titleBackground = ImageIO.read(getClass().getResourceAsStream("/background/Fantasy_Landscape.png"));
+            g2.drawImage(titleBackground, 0, 0, gp.screenWidth, gp.screenHeight,null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        g2.setColor(new Color(0,0,0,0));
         g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
         //TITLE NAME
