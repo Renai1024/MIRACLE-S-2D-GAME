@@ -1,21 +1,18 @@
 package object;
 
 import Main.GamePanel;
+import entity.Entity;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
 
-public class OBJ_Sword extends SuperObject{
+public class OBJ_Sword extends Entity {
 
-    GamePanel gp;
 
     public OBJ_Sword(GamePanel gp) {
+
+        super(gp);
         name = "Sword";
-        try {
-            image = ImageIO.read(getClass().getResourceAsStream("/objects/sword.png"));
-            uTool.scaleImage(image,gp.tileSize,gp.tileSize);
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
+        down1 = setup("/objects/sword");
     }
 }
